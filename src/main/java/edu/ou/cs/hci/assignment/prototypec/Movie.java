@@ -295,12 +295,61 @@ public final class Movie
 		return image;
 	}
 
-	// TODO #0: Add a property access method for each of the other attributes.
+	public IntegerProperty yearProperty() {
+		return year;
+	}
+
+	public IntegerProperty runtimeProperty() {
+		return runtime;
+	}
+
+	public BooleanProperty awardPictureProperty() {
+		return awardPicture;
+	}
+
+	public BooleanProperty awardDirectingProperty() {
+		return awardDirecting;
+	}
+
+	public BooleanProperty awardCinematographyProperty() {
+		return awardCinematography;
+	}
+
+	public BooleanProperty awardActingProperty() {
+		return awardActing;
+	}
+
+	public DoubleProperty averageReviewScoreProperty() {
+		return averageReviewScore;
+	}
+
+	public IntegerProperty numberOfReviewsProperty() {
+		return numberOfReviews;
+	}
+
+	public IntegerProperty genreProperty() {
+		return genre;
+	}
+
+	public StringProperty directorProperty() {
+		return director;
+	}
 
 	// This one's a freebie! CollectionPane.Attr3SelectedStateCallback needs it.
-	public BooleanProperty	isAnimatedProperty()
-	{
+	public BooleanProperty	isAnimatedProperty() {
 		return isAnimated;
+	}
+
+	public BooleanProperty isColorProperty() {
+		return isColor;
+	}
+
+	public StringProperty summaryProperty() {
+		return summary;
+	}
+
+	public StringProperty commentsProperty() {
+		return comments;
 	}
 
 	//**********************************************************************
