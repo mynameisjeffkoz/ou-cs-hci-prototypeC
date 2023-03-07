@@ -298,6 +298,10 @@ public final class Movie
 		return year;
 	}
 
+	public StringProperty ratingProperty() {
+		return rating;
+	}
+
 	public IntegerProperty runtimeProperty() {
 		return runtime;
 	}
