@@ -221,7 +221,15 @@ public final class View
 	// Pass the chosen file to the Model via Controller.setProperty() to open.
 	private void	handleFileOpenMenuItem()
 	{
-		System.out.println("Open menu pushed");
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setInitialDirectory(new File(".\\Build\\ou-cs-hci\\src\\main\\java\\edu\\ou\\cs\\hci\\resources\\data"));
+		fileChooser.setTitle("Open File");
+		fileChooser.getExtensionFilters().addAll(
+				new FileChooser.ExtensionFilter("CSV","*.csv"),
+				new FileChooser.ExtensionFilter("All Files", "*.csv")
+				);
+		File selectedFile = fileChooser.showOpenDialog(stage);
+		controller.set("file", selectedFile);
 	}
 
 	// TODO #3b: Implement the File/Save menu item handler, allowing the user
