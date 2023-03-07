@@ -23,6 +23,9 @@ import java.net.URL;
 import javafx.event.*;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
@@ -54,9 +57,14 @@ public final class View
 	private final Controller				controller;
 
 	// TODO #2a: Add members for your menus/items here...
-	private MenuItem						menuItemExample;
 
-	private MenuItem  openMenuItem, saveMenuItem;
+	private Menu moviesMenu, fileMenu, editMenu, windowMenu;
+
+	private MenuItem moviesAboutMenuItem, moviesQuitMenuItem;
+
+	private MenuItem fileNewMenuItem, fileOpenMenuItem, fileCloseMenuItem,fileSaveMenuItem, filePrintMenuItem;
+
+	private MenuItem editUndoMenuItem, editRedoMenuItem, editCutMenuItem, editCopyMenuItem, editPasteMenuItem;
 
 	// Handlers
 	private final ActionHandler			actionHandler;
@@ -117,9 +125,28 @@ public final class View
 			pane.initialize();
 
 		// Initialize your menus/items here...
-		menuItemExample.setOnAction(actionHandler);
-		openMenuItem.setOnAction(actionHandler);
-		saveMenuItem.setOnAction(actionHandler);
+
+		moviesQuitMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Q, KeyCombination.CONTROL_DOWN));
+
+
+		fileNewMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN));
+		fileOpenMenuItem.setOnAction(actionHandler);
+		fileOpenMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN));
+
+		fileCloseMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.W,KeyCombination.CONTROL_DOWN));
+		fileSaveMenuItem.setOnAction(actionHandler);
+		fileSaveMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
+		filePrintMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.P,KeyCombination.CONTROL_DOWN));
+		filePrintMenuItem.setDisable(true);
+
+		editUndoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Z,KeyCombination.CONTROL_DOWN));
+		editUndoMenuItem.setDisable(true);
+		editRedoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN));
+		editRedoMenuItem.setDisable(true);
+
+		editCutMenuItem.setAccelerator((new KeyCodeCombination(KeyCode.X, KeyCombination.CONTROL_DOWN)));
+		editCopyMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN));
+		editPasteMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_DOWN));
 	}
 
 	// The controller calls this method when it removes a view.
@@ -130,7 +157,8 @@ public final class View
 			pane.terminate();
 
 		// Terminate your menus/items here...
-		menuItemExample.setOnAction(null);
+		fileOpenMenuItem.setOnAction(null);
+		fileSaveMenuItem.setOnAction(null);
 	}
 
 	// The controller calls this method whenever something changes in the model.
@@ -198,20 +226,39 @@ public final class View
 		Circle		decoration2 = new Circle(4.0, Color.BLUE);
 
 		// Create MenuItems...
-		menuItemExample = new MenuItem("Item", decoration1);
-		openMenuItem = new MenuItem("Open");
-		saveMenuItem = new MenuItem("Save");
+		moviesAboutMenuItem = new MenuItem("About");
+		moviesQuitMenuItem = new MenuItem("Quit");
+
+		fileNewMenuItem = new MenuItem("New");
+		fileOpenMenuItem = new MenuItem("Open");
+
+		fileCloseMenuItem = new MenuItem("Close");
+		fileSaveMenuItem = new MenuItem("Save");
+		filePrintMenuItem = new MenuItem("Print");
+
+		editUndoMenuItem = new MenuItem("Undo");
+		editRedoMenuItem = new MenuItem("Redo");
+
+		editCutMenuItem = new MenuItem("Cut");
+		editCopyMenuItem = new MenuItem("Copy");
+		editPasteMenuItem = new MenuItem("Paste");
 
 		// ...create Menus to hold them...
-		Menu	menuExample = new Menu("Menu", decoration2);
-		Menu fileMenu = new Menu("File");
+		moviesMenu = new Menu("Movies");
+		fileMenu = new Menu("File");
+		editMenu = new Menu("Edit");
+		windowMenu = new Menu("Window");
 
 		// ...add the MenuItems to their menus...
-		menuExample.getItems().addAll(menuItemExample);
-		fileMenu.getItems().addAll(openMenuItem,saveMenuItem);
+		moviesMenu.getItems().addAll(moviesAboutMenuItem,moviesQuitMenuItem);
+		fileMenu.getItems().addAll(fileNewMenuItem, fileOpenMenuItem, new SeparatorMenuItem(),
+				fileCloseMenuItem, fileSaveMenuItem, filePrintMenuItem);
+		editMenu.getItems().addAll(editUndoMenuItem,editRedoMenuItem, new SeparatorMenuItem(),
+				editCutMenuItem,editCopyMenuItem,editPasteMenuItem);
+		windowMenu.getItems().addAll(new MenuItem("One"),new MenuItem("Two"), new MenuItem("Three"));
 
 		// ...then add the Menus to the MenuBar.
-		menuBar.getMenus().addAll(menuExample,fileMenu);
+		menuBar.getMenus().addAll(moviesMenu, fileMenu, editMenu, windowMenu);
 
 		return menuBar;
 	}
@@ -264,12 +311,9 @@ public final class View
 		public void	handle(ActionEvent e)
 		{
 			Object	source = e.getSource();
-
-			if (source == menuItemExample)
-				System.out.println("User selected the example menu item.");
-			if (source == openMenuItem)
+			if (source == fileOpenMenuItem)
 				handleFileOpenMenuItem();
-			if (source == saveMenuItem)
+			if (source == fileSaveMenuItem)
 				handleFileSaveMenuItem();
 		}
 	}
