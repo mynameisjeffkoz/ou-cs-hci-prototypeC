@@ -118,6 +118,8 @@ public final class View
 
 		// Initialize your menus/items here...
 		menuItemExample.setOnAction(actionHandler);
+		openMenuItem.setOnAction(actionHandler);
+		saveMenuItem.setOnAction(actionHandler);
 	}
 
 	// The controller calls this method when it removes a view.
@@ -219,6 +221,7 @@ public final class View
 	// Pass the chosen file to the Model via Controller.setProperty() to open.
 	private void	handleFileOpenMenuItem()
 	{
+		System.out.println("Open menu pushed");
 	}
 
 	// TODO #3b: Implement the File/Save menu item handler, allowing the user
@@ -226,6 +229,7 @@ public final class View
 	// Pass the chosen file to the Model via Controller.save() to save.
 	private void	handleFileSaveMenuItem()
 	{
+		System.out.println("Save menu pushed");
 	}
 
 	//**********************************************************************
@@ -245,6 +249,10 @@ public final class View
 
 			if (source == menuItemExample)
 				System.out.println("User selected the example menu item.");
+			if (source == openMenuItem)
+				handleFileOpenMenuItem();
+			if (source == saveMenuItem)
+				handleFileSaveMenuItem();
 		}
 	}
 
