@@ -56,7 +56,7 @@ public final class View
 	// Master of the program, manager of the data, mediator of all updates
 	private final Controller				controller;
 
-	// TODO #2a: Add members for your menus/items here...
+	// Add members for your menus/items here...
 
 	private Menu moviesMenu, fileMenu, editMenu, windowMenu;
 
@@ -216,7 +216,7 @@ public final class View
 	{
 		MenuBar	menuBar = new MenuBar();
 
-		// TODO #2b: Build your Menus and MenuBar below. For any MenuItems you
+		// Build your Menus and MenuBar below. For any MenuItems you
 		// use, add members and code to initialize(), terminate(), update(), and
 		// updateProperty() above, as needed. The following example code creates
 		// a menu with one item in it, with examples of graphics for decoration.
