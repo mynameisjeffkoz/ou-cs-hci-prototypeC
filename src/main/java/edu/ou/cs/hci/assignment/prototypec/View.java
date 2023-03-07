@@ -56,6 +56,8 @@ public final class View
 	// TODO #2a: Add members for your menus/items here...
 	private MenuItem						menuItemExample;
 
+	private MenuItem  openMenuItem, saveMenuItem;
+
 	// Handlers
 	private final ActionHandler			actionHandler;
 	private final WindowHandler			windowHandler;
@@ -195,15 +197,19 @@ public final class View
 
 		// Create MenuItems...
 		menuItemExample = new MenuItem("Item", decoration1);
+		openMenuItem = new MenuItem("Open");
+		saveMenuItem = new MenuItem("Save");
 
 		// ...create Menus to hold them...
 		Menu	menuExample = new Menu("Menu", decoration2);
+		Menu fileMenu = new Menu("File");
 
 		// ...add the MenuItems to their menus...
 		menuExample.getItems().addAll(menuItemExample);
+		fileMenu.getItems().addAll(openMenuItem,saveMenuItem);
 
 		// ...then add the Menus to the MenuBar.
-		menuBar.getMenus().addAll(menuExample);
+		menuBar.getMenus().addAll(menuExample,fileMenu);
 
 		return menuBar;
 	}
