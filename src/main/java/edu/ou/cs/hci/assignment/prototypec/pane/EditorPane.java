@@ -311,8 +311,23 @@ public final class EditorPane extends AbstractPane
 		movie.titleProperty().addListener(this::handleChangeS);
 		movie.imageProperty().addListener(this::handleChangeS);
 
-		// TODO #4a: Register listeners for all other movie properties that are
+		// Register listeners for all other movie properties that are
 		// displayed in editing widgets.
+		movie.yearProperty().addListener(this::handleChangeN);
+		movie.ratingProperty().addListener(this::handleChangeS);
+		movie.runtimeProperty().addListener(this::handleChangeN);
+		movie.awardPictureProperty().addListener(this::handleChangeB);
+		movie.awardDirectingProperty().addListener(this::handleChangeB);
+		movie.awardCinematographyProperty().addListener(this::handleChangeB);
+		movie.awardActingProperty().addListener(this::handleChangeB);
+		movie.averageReviewScoreProperty().addListener(this::handleChangeN);
+		movie.numberOfReviewsProperty().addListener(this::handleChangeN);
+		movie.genreProperty().addListener(this::handleChangeN);
+		movie.directorProperty().addListener(this::handleChangeS);
+		movie.isAnimatedProperty().addListener(this::handleChangeB);
+		movie.isColorProperty().addListener(this::handleChangeB);
+		movie.summaryProperty().addListener(this::handleChangeS);
+		movie.commentsProperty().addListener(this::handleChangeS);
 	}
 
 	private void	unregisterPropertyListeners(Movie movie)
@@ -320,8 +335,23 @@ public final class EditorPane extends AbstractPane
 		movie.titleProperty().removeListener(this::handleChangeS);
 		movie.imageProperty().removeListener(this::handleChangeS);
 
-		// TODO #4b: Unregister listeners for all other movie properties that
-		// are displayed in editing widgets.
+		// Unregister listeners for all other movie properties
+		movie.yearProperty().removeListener(this::handleChangeN);
+		movie.ratingProperty().removeListener(this::handleChangeS);
+		movie.runtimeProperty().removeListener(this::handleChangeN);
+		movie.awardPictureProperty().removeListener(this::handleChangeB);
+		movie.awardDirectingProperty().removeListener(this::handleChangeB);
+		movie.awardCinematographyProperty().removeListener(this::handleChangeB);
+		movie.awardActingProperty().removeListener(this::handleChangeB);
+		movie.averageReviewScoreProperty().removeListener(this::handleChangeN);
+		movie.numberOfReviewsProperty().removeListener(this::handleChangeN);
+		movie.genreProperty().removeListener(this::handleChangeN);
+		movie.directorProperty().removeListener(this::handleChangeS);
+		movie.isAnimatedProperty().removeListener(this::handleChangeB);
+		movie.isColorProperty().removeListener(this::handleChangeB);
+		movie.summaryProperty().removeListener(this::handleChangeS);
+		movie.commentsProperty().removeListener(this::handleChangeS);
+
 	}
 
 	private void	populateWidgetsWithDefaultValues()
@@ -701,6 +731,14 @@ public final class EditorPane extends AbstractPane
 			cTitle.setText(newValue);
 		else if (observable == movie.imageProperty())
 			cImageFile.setText(newValue);
+	}
+
+	private void handleChangeN(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+
+	}
+
+	private void handleChangeB(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+
 	}
 }
 
