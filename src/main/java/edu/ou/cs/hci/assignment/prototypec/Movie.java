@@ -42,7 +42,6 @@ public final class Movie
 	private final SimpleStringProperty		title;
 	private final SimpleStringProperty		image;
 
-	// TODO #0: Add members for the other 15 attributes.
 	private final SimpleIntegerProperty	year;
 	private final SimpleStringProperty		rating;
 	private final SimpleIntegerProperty	runtime;
@@ -397,8 +396,19 @@ public final class Movie
 
 		list.add(getTitle());
 		list.add(getImage());
-
-		// TODO #1: Add a string to the list for each of the other attributes.
+		list.add(Integer.toString(getYear()));
+		list.add(getRating());
+		list.add(Integer.toString(getRuntime()));
+		list.add(Boolean.toString(getAwardPicture()));
+		list.add(Boolean.toString(getAwardDirecting()));
+		list.add(Boolean.toString(getAwardCinematography()));
+		list.add(Boolean.toString(getAwardActing()));
+		list.add(Double.toString(getAverageReviewScore()));
+		list.add(Integer.toString(getGenre()));
+		list.add(Boolean.toString(getIsAnimated()));
+		list.add(Boolean.toString(getIsColor()));
+		list.add(getSummary());
+		list.add(getComments());
 
 		return list;
 	}
