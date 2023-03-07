@@ -216,8 +216,8 @@ public final class View
 		return menuBar;
 	}
 
-	// TODO #3a: Implement the File/Open menu item handler, allowing the user
-	// to select a CSV file to open. See the javafx.stage.FileChooser class.
+	// Alloq the user to select a CSV file to open. See the
+	// javafx.stage.FileChooser class.
 	// Pass the chosen file to the Model via Controller.setProperty() to open.
 	private void	handleFileOpenMenuItem()
 	{
@@ -232,11 +232,19 @@ public final class View
 		controller.set("file", selectedFile);
 	}
 
-	// TODO #3b: Implement the File/Save menu item handler, allowing the user
+	// Implement the File/Save menu item handler, allowing the user
 	// to select a CSV file to save. See the javafx.stage.FileChooser class.
 	// Pass the chosen file to the Model via Controller.save() to save.
 	private void	handleFileSaveMenuItem()
 	{
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setInitialDirectory(new File(".\\Build\\ou-cs-hci\\src\\main\\java\\edu\\ou\\cs\\hci\\resources\\data"));
+		fileChooser.setTitle("Save File");
+		fileChooser.getExtensionFilters().addAll(
+				new FileChooser.ExtensionFilter("CSV","*.csv"),
+				new FileChooser.ExtensionFilter("All Files", "*.csv")
+		);
+		controller.save(fileChooser.showSaveDialog(stage));
 		System.out.println("Save menu pushed");
 	}
 
@@ -244,7 +252,7 @@ public final class View
 	// Inner Classes (Event Handling)
 	//**********************************************************************
 
-	// TODO #2c: Add code to process user selection of each of your MenuItems.
+	// Process user selection of each of your MenuItems.
 	// Call your handleFileOpenMenuItem() and handleFileSaveMenuItem() methods
 	// above for those two menu items. For all other menu items, print a brief
 	// but informative message to the console.
