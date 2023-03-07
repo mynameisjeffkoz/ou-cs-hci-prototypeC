@@ -206,6 +206,7 @@ public final class Model
 		}
 		catch (Exception ex)
 		{
+			ex.printStackTrace();
 			System.err.println("***Error loading data from file.***");
 			return;
 		}

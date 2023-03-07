@@ -229,7 +229,8 @@ public final class View
 				new FileChooser.ExtensionFilter("All Files", "*.csv")
 				);
 		File selectedFile = fileChooser.showOpenDialog(stage);
-		controller.set("file", selectedFile);
+		if (selectedFile != null)
+			controller.setProperty("file", selectedFile);
 	}
 
 	// Implement the File/Save menu item handler, allowing the user
@@ -244,7 +245,8 @@ public final class View
 				new FileChooser.ExtensionFilter("CSV","*.csv"),
 				new FileChooser.ExtensionFilter("All Files", "*.csv")
 		);
-		controller.save(fileChooser.showSaveDialog(stage));
+		File file = fileChooser.showSaveDialog(stage);
+		controller.save(file);
 		System.out.println("Save menu pushed");
 	}
 

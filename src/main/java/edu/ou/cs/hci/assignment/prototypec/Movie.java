@@ -404,7 +404,9 @@ public final class Movie
 		list.add(Boolean.toString(getAwardCinematography()));
 		list.add(Boolean.toString(getAwardActing()));
 		list.add(Double.toString(getAverageReviewScore()));
+		list.add(Integer.toString(getNumberOfReviews()));
 		list.add(Integer.toString(getGenre()));
+		list.add(getDirector());
 		list.add(Boolean.toString(getIsAnimated()));
 		list.add(Boolean.toString(getIsColor()));
 		list.add(getSummary());
