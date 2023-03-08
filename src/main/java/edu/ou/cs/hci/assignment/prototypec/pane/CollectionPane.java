@@ -22,7 +22,7 @@ package edu.ou.cs.hci.assignment.prototypec.pane;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.function.Predicate;
-import javafx.beans.property.*;
+
 import javafx.beans.value.ObservableValue;
 import javafx.collections.*;
 import javafx.collections.transformation.FilteredList;
@@ -39,7 +39,6 @@ import javafx.scene.text.*;
 import javafx.util.Callback;
 import javafx.util.converter.*;
 import edu.ou.cs.hci.assignment.prototypec.*;
-import edu.ou.cs.hci.resources.Resources;
 
 //******************************************************************************
 
@@ -120,9 +119,13 @@ public final class CollectionPane extends AbstractPane
 	private Label					summaryRuntime;
 
 	// TODO #6a: Add members for your accordion widgets here...
-	//private CheckBox				someCheckBox;
-	//private ComboBox<String>		someComboBox;
-	//private ListView<String>		someListView;
+	private TextField titleIncludeField, titleExcludeField;
+
+	private ArrayList<CheckBox> genreMatchChecks;
+
+	private ComboBox<String> ratingBox;
+
+	private Spinner<Integer> minRuntimeSpinner, maxRuntimeSpinner;
 
 	// Support
 	private boolean				ignoreSelectionEvents;
@@ -239,11 +242,17 @@ public final class CollectionPane extends AbstractPane
 		smodel.selectedItemProperty().addListener(this::changeItem);
 
 		// TODO #6c: Register listeners for your accordion widgets.
-		//someCheckBox.setOnAction(actionHandler);
-		//someComboBox.getSelectionModel().selectedItemProperty()
-		//	.addListener(this::changeString);
-		//someListView.getSelectionModel().getSelectedIndices()
-		//	.addListener(changeHandler);
+		titleIncludeField.setOnAction(actionHandler);
+		titleExcludeField.setOnAction(actionHandler);
+
+		for (CheckBox box:genreMatchChecks)
+			box.setOnAction(actionHandler);
+
+		ratingBox.getSelectionModel().selectedItemProperty().addListener(this::handleChangeS);
+
+		minRuntimeSpinner.getValueFactory().valueProperty().addListener(this::handleChangeN);
+		maxRuntimeSpinner.getValueFactory().valueProperty().addListener(this::handleChangeN);
+
 	}
 
 	private void	unregisterWidgetHandlers()
@@ -251,11 +260,17 @@ public final class CollectionPane extends AbstractPane
 		smodel.selectedItemProperty().removeListener(this::changeItem);
 
 		// TODO #6d: Unregister listeners for your accordion widgets.
-		//someCheckBox.setOnAction(null);
-		//someComboBox.getSelectionModel().selectedItemProperty()
-		//	.removeListener(this::changeString);
-		//someListView.getSelectionModel().getSelectedIndices()
-		//	.removeListener(changeHandler);
+		titleIncludeField.setOnAction(null);
+		titleExcludeField.setOnAction(null);
+
+		for (CheckBox box:genreMatchChecks)
+			box.setOnAction(null);
+
+		ratingBox.getSelectionModel().selectedItemProperty().removeListener(this::handleChangeS);
+
+		minRuntimeSpinner.getValueFactory().valueProperty().removeListener(this::handleChangeN);
+		maxRuntimeSpinner.getValueFactory().valueProperty().removeListener(this::handleChangeN);
+
 	}
 
 	private void	registerPropertyListeners(Movie movie)
@@ -265,6 +280,10 @@ public final class CollectionPane extends AbstractPane
 
 		// TODO #7a: Register listeners for all other movie properties that are
 		// displayed in summary widgets and/or edited in accordion widgets.
+		movie.yearProperty().addListener(this::handleChangeN);
+		movie.genreProperty().addListener(this::handleChangeN);
+		movie.ratingProperty().addListener(this::handleChangeS);
+		movie.runtimeProperty().addListener(this::handleChangeN);
 	}
 
 	private void	unregisterPropertyListeners(Movie movie)
@@ -274,6 +293,11 @@ public final class CollectionPane extends AbstractPane
 
 		// TODO #7b: Unregister listeners for all other movie properties that
 		// are displayed in summary widgets and/or edited in accordion widgets.
+		movie.yearProperty().removeListener(this::handleChangeN);
+		movie.genreProperty().removeListener(this::handleChangeN);
+		movie.ratingProperty().removeListener(this::handleChangeS);
+		movie.runtimeProperty().removeListener(this::handleChangeN);
+
 	}
 
 	private void	populateWidgetsWithDefaultValues()
@@ -400,18 +424,61 @@ public final class CollectionPane extends AbstractPane
 	private Node	buildAccordion()
 	{
 		// Create your widgets, put them in an accordion to return...
-		//someCheckBox = new CheckBox();
-		//someComboBox = new ComboBox<String>();
-		//someListView = new ListView<String>();
+		TitledPane filterTitle = new TitledPane("Title", buildTitleFilter());
+		TitledPane filterGenre = new TitledPane("Genre", buildGenreFilter());
+		TitledPane filterRating = new TitledPane("Rating", buildRatingFilter());
+		TitledPane filterRuntime = new TitledPane("Runtime", buildRuntimeFilter());
 
 		// Replace this placeholder label with your actual accordion design.
-		Label	label = new Label("this space reserved for accordion");
+		Accordion accordion = new Accordion();
+		accordion.getPanes().addAll(filterTitle, filterGenre, filterRating, filterRuntime);
+		return accordion;
+	}
 
-		label.setPadding(PADDING);
-		label.setPrefWidth(100.0);
-		label.setWrapText(true);
+	private Node buildTitleFilter() {
+		FlowPane flowPane = new FlowPane(Orientation.VERTICAL, 8, 8);
 
-		return label;
+		titleIncludeField = new TextField();
+		titleExcludeField = new TextField();
+
+		flowPane.getChildren().addAll(new Label("Include:"), titleIncludeField,
+				new Label("Exclude:"), titleExcludeField);
+		return flowPane;
+	}
+
+	private Node buildGenreFilter() {
+		FlowPane flowPane = new FlowPane(Orientation.VERTICAL, 8, 8);
+
+		genreMatchChecks = new ArrayList<CheckBox>();
+
+		for (String genre:gdata)
+			genreMatchChecks.add(new CheckBox(genre));
+
+		flowPane.getChildren().addAll(genreMatchChecks);
+
+		return flowPane;
+	}
+
+	private Node buildRatingFilter() {
+		FlowPane flowPane = new FlowPane(Orientation.VERTICAL, 8, 8);
+
+		ratingBox = new ComboBox<String>();
+		ratingBox.getItems().addAll(rdata);
+
+		flowPane.getChildren().add(ratingBox);
+		return flowPane;
+	}
+
+	private Node buildRuntimeFilter() {
+		FlowPane flowPane = new FlowPane(Orientation.VERTICAL, 8, 8);
+
+		minRuntimeSpinner = new Spinner<Integer>(1,300,1);
+		maxRuntimeSpinner = new Spinner<Integer>(1,300,150);
+
+		flowPane.getChildren().addAll(new Label("Minimum:"), minRuntimeSpinner,
+				new Label("Maximum"), maxRuntimeSpinner);
+
+		return flowPane;
 	}
 
 	//**********************************************************************
@@ -639,14 +706,9 @@ public final class CollectionPane extends AbstractPane
 		// ...
 	}
 
-	// For widgets with a numeric value like Slider and Spinner, you can't use
-	// their actual numeric type directly. Use the Number superclass instead.
-	// Cast oldValue or newValue to the actual type inside the method as needed.
-	//private void	handleChangeI(ObservableValue<? extends Number> observable,
-	//							  Number oldValue, Number newValue)
-	//{
-	//	//Integer		value = (Integer)newValue;
-	//}
+	private void handleChangeN(ObservableValue<? extends  Number> observable, Number oldValue, Number newValue) {
+		Movie movie = (Movie) controller.getProperty("movie");
+	}
 
 	//**********************************************************************
 	// Inner Classes (Cell Factories)
