@@ -504,6 +504,30 @@ public final class CollectionPane extends AbstractPane
 			// TODO #8: Implement tests for each of your accordion sections.
 			// Compare edited widget values to movie property values.
 
+			// Test for title missing from include
+			if (!movie.getTitle().contains(titleIncludeField.getText()))
+				return false;
+
+			// Test for title present in exclude
+			if (movie.getTitle().contains(titleExcludeField.getText()))
+				return false;
+
+			// Test for Genre
+
+
+
+			// Test for Rating
+
+			String ratingFilter = ratingBox.getSelectionModel().getSelectedItem();
+			if (!movie.getRating().equalsIgnoreCase(ratingFilter))
+				return false;
+
+			// Test for Runtime
+			int runtime = movie.getRuntime();
+
+			if (runtime < minRuntimeSpinner.getValue() || runtime > maxRuntimeSpinner.getValue())
+				return false;
+
 			// Hint: Widget types that allow selection from a list have either
 			// a SelectionModel (for one) or MultipleSelectionModel (for many).
 			// They have methods for looking up selected index(es) or item(s).
@@ -512,6 +536,7 @@ public final class CollectionPane extends AbstractPane
 			// is a very aggressive form of filtering. Most or all movies should
 			// appear filtered out for most combinations of accordion settings!)
 
+			// Return true only if all previous tests are passed
 			return true;
 		}
 	}
