@@ -20,7 +20,6 @@ package edu.ou.cs.hci.assignment.prototypec.pane;
 //import java.lang.*;
 import java.util.*;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.*;
 import javafx.event.*;
 import javafx.geometry.*;
 import javafx.scene.*;
@@ -30,7 +29,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.*;
 import javafx.scene.text.*;
 import edu.ou.cs.hci.assignment.prototypec.*;
-import edu.ou.cs.hci.resources.Resources;
 
 //******************************************************************************
 
@@ -313,16 +311,16 @@ public final class EditorPane extends AbstractPane
 
 		// Register listeners for all other movie properties that are
 		// displayed in editing widgets.
-		movie.yearProperty().addListener(this::handleChangeN);
+		movie.yearProperty().addListener(this::handleChangeI);
 		movie.ratingProperty().addListener(this::handleChangeS);
-		movie.runtimeProperty().addListener(this::handleChangeN);
+		movie.runtimeProperty().addListener(this::handleChangeI);
 		movie.awardPictureProperty().addListener(this::handleChangeB);
 		movie.awardDirectingProperty().addListener(this::handleChangeB);
 		movie.awardCinematographyProperty().addListener(this::handleChangeB);
 		movie.awardActingProperty().addListener(this::handleChangeB);
-		movie.averageReviewScoreProperty().addListener(this::handleChangeN);
-		movie.numberOfReviewsProperty().addListener(this::handleChangeN);
-		movie.genreProperty().addListener(this::handleChangeN);
+		movie.averageReviewScoreProperty().addListener(this::handleChangeI);
+		movie.numberOfReviewsProperty().addListener(this::handleChangeI);
+		movie.genreProperty().addListener(this::handleChangeI);
 		movie.directorProperty().addListener(this::handleChangeS);
 		movie.isAnimatedProperty().addListener(this::handleChangeB);
 		movie.isColorProperty().addListener(this::handleChangeB);
@@ -336,16 +334,16 @@ public final class EditorPane extends AbstractPane
 		movie.imageProperty().removeListener(this::handleChangeS);
 
 		// Unregister listeners for all other movie properties
-		movie.yearProperty().removeListener(this::handleChangeN);
+		movie.yearProperty().removeListener(this::handleChangeI);
 		movie.ratingProperty().removeListener(this::handleChangeS);
-		movie.runtimeProperty().removeListener(this::handleChangeN);
+		movie.runtimeProperty().removeListener(this::handleChangeI);
 		movie.awardPictureProperty().removeListener(this::handleChangeB);
 		movie.awardDirectingProperty().removeListener(this::handleChangeB);
 		movie.awardCinematographyProperty().removeListener(this::handleChangeB);
 		movie.awardActingProperty().removeListener(this::handleChangeB);
-		movie.averageReviewScoreProperty().removeListener(this::handleChangeN);
-		movie.numberOfReviewsProperty().removeListener(this::handleChangeN);
-		movie.genreProperty().removeListener(this::handleChangeN);
+		movie.averageReviewScoreProperty().removeListener(this::handleChangeI);
+		movie.numberOfReviewsProperty().removeListener(this::handleChangeI);
+		movie.genreProperty().removeListener(this::handleChangeI);
 		movie.directorProperty().removeListener(this::handleChangeS);
 		movie.isAnimatedProperty().removeListener(this::handleChangeB);
 		movie.isColorProperty().removeListener(this::handleChangeB);
@@ -731,14 +729,51 @@ public final class EditorPane extends AbstractPane
 			cTitle.setText(newValue);
 		else if (observable == movie.imageProperty())
 			cImageFile.setText(newValue);
+		else if (observable == movie.ratingProperty())
+			cRating.getSelectionModel().select(newValue);
+		else if (observable == movie.directorProperty())
+			cDirector.setText(newValue);
+		else if (observable == movie.summaryProperty())
+			cSummary.setText(newValue);
+		else if (observable == movie.commentsProperty())
+			cComments.setText(newValue);
 	}
 
-	private void handleChangeN(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+	private void handleChangeI(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+		Movie movie = (Movie)controller.getProperty("movie");
 
+		if (observable == movie.yearProperty())
+			cYear.getValueFactory().setValue((Integer) newValue);
+		else if (observable == movie.runtimeProperty())
+			cRuntime.setValue((Integer) newValue);
+		else if (observable == movie.averageReviewScoreProperty())
+			cAverageReviewScore.getValueFactory().setValue((Double) newValue);
+		else if (observable == movie.numberOfReviewsProperty())
+			cNumberOfReviews.getValueFactory().setValue((Integer) newValue);
+		else if (observable == movie.genreProperty()) {
+			StringBuilder stringBuilder = new StringBuilder(Integer.toBinaryString((Integer)newValue));
+			stringBuilder.reverse();
+			String s = stringBuilder.toString();
+			for (int i = 0; i < s.length(); i++) {
+				if (s.charAt(i) == '1')
+					cGenres.get(i).setSelected(true);
+				else
+					cGenres.get(i).setSelected(false);
+			}
+		}
 	}
 
 	private void handleChangeB(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+		Movie movie = (Movie)controller.getProperty("movie");
 
+		if (observable == movie.awardPictureProperty())
+			cAwardPicture.setSelected(newValue);
+		else if (observable == movie.awardDirectingProperty())
+			cAwardDirecting.setSelected(newValue);
+		else if (observable == movie.awardCinematographyProperty())
+			cAwardCinematography.setSelected(newValue);
+		else if (observable == movie.awardActingProperty())
+			cAwardActing.setSelected(newValue);
 	}
 }
 
