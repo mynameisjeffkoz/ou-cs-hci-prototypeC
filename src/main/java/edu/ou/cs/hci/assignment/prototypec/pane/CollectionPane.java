@@ -666,8 +666,6 @@ public final class CollectionPane extends AbstractPane
 		{
 			Object	source = e.getSource();
 
-			// TODO: REmove this debug line
-			System.out.println(source.toString());
 			// TODO #9a: Call updateFilter() if the action came from any
 			// of your accordion widgets that involve action events.
 			if (source == titleIncludeField)
@@ -752,16 +750,33 @@ public final class CollectionPane extends AbstractPane
 			summaryTitle.setText(newValue);
 		else if (observable == movie.imageProperty())
 			summaryImage.setImage(movie.getImageAsImage(FX_ICON, W2, H2));
+		else if (observable == movie.ratingProperty())
+			summaryRating.setText(newValue);
 		// ...
 
 		// Call updateFilter() if the change came from a filtering property.
 		if (observable == movie.titleProperty())
+			updateFilter();
+		else if (observable == movie.ratingProperty())
 			updateFilter();
 		// ...
 	}
 
 	private void handleChangeN(ObservableValue<? extends  Number> observable, Number oldValue, Number newValue) {
 		Movie movie = (Movie) controller.getProperty("movie");
+
+		// Update summary widgets when corresponding movie properties change
+		if (observable == movie.yearProperty())
+			summaryYear.setText(Integer.toString((Integer)newValue));
+		else if (observable == movie.genreProperty())
+			summaryGenre.setText(movie.getGenreAsString(gdata));
+		else if (observable == movie.runtimeProperty())
+			summaryRuntime.setText(movie.getRuntimeAsString());
+
+		if (observable == movie.genreProperty())
+			updateFilter();
+		else if (observable == movie.runtimeProperty())
+			updateFilter();
 	}
 
 	//**********************************************************************
