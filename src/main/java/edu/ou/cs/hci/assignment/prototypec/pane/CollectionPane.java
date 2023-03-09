@@ -248,10 +248,10 @@ public final class CollectionPane extends AbstractPane
 		for (CheckBox box:genreMatchChecks)
 			box.setOnAction(actionHandler);
 
-		ratingBox.getSelectionModel().selectedItemProperty().addListener(this::handleChangeS);
+		ratingBox.getSelectionModel().selectedItemProperty().addListener(this::changeString);
 
-		minRuntimeSpinner.getValueFactory().valueProperty().addListener(this::handleChangeN);
-		maxRuntimeSpinner.getValueFactory().valueProperty().addListener(this::handleChangeN);
+		minRuntimeSpinner.getValueFactory().valueProperty().addListener(this::changeNumber);
+		maxRuntimeSpinner.getValueFactory().valueProperty().addListener(this::changeNumber);
 
 	}
 
@@ -266,10 +266,10 @@ public final class CollectionPane extends AbstractPane
 		for (CheckBox box:genreMatchChecks)
 			box.setOnAction(null);
 
-		ratingBox.getSelectionModel().selectedItemProperty().removeListener(this::handleChangeS);
+		ratingBox.getSelectionModel().selectedItemProperty().removeListener(this::changeString);
 
-		minRuntimeSpinner.getValueFactory().valueProperty().removeListener(this::handleChangeN);
-		maxRuntimeSpinner.getValueFactory().valueProperty().removeListener(this::handleChangeN);
+		minRuntimeSpinner.getValueFactory().valueProperty().removeListener(this::changeNumber);
+		maxRuntimeSpinner.getValueFactory().valueProperty().removeListener(this::changeNumber);
 
 	}
 
@@ -509,29 +509,39 @@ public final class CollectionPane extends AbstractPane
 				return false;
 
 			// Test for title present in exclude
-			if (movie.getTitle().contains(titleExcludeField.getText()))
+			String exclude = titleExcludeField.getText();
+			if (!exclude.equals("") && movie.getTitle().contains(exclude))
 				return false;
 
 			// Test for Genre
-			// Get the integer as a binary string
-			StringBuilder builder = new StringBuilder(Integer.toBinaryString(movie.getGenre()));
-			// Reverse the order to start at action
-			builder.reverse();
-			// Traverse the string one character at a time
-			for (int i = 0; i < builder.length(); i++) {
-				// If a movie genre matches a checkbox
-				if (builder.charAt(i) == '1' && genreMatchChecks.get(i).isSelected())
-					// Exit the loop early
+			// Skip this test if no genres are selected
+			boolean checkGenre = false;
+			for (CheckBox c:genreMatchChecks)
+				if (c.isSelected()) {
+					checkGenre = true;
 					break;
-				// If you reach the end without any successes
-				if (i == builder.length() - 1)
-					return false;
+				}
+			if (checkGenre) {
+				// Get the integer as a binary string
+				StringBuilder builder = new StringBuilder(Integer.toBinaryString(movie.getGenre()));
+				// Reverse the order to start at action
+				builder.reverse();
+				// Traverse the string one character at a time
+				for (int i = 0; i < builder.length(); i++) {
+					// If a movie genre matches a checkbox
+					if (builder.charAt(i) == '1' && genreMatchChecks.get(i).isSelected())
+						// Exit the loop early
+						break;
+					// If you reach the end without any successes
+					if (i == builder.length() - 1)
+						return false;
+				}
 			}
 
 			// Test for Rating
 
 			String ratingFilter = ratingBox.getSelectionModel().getSelectedItem();
-			if (!movie.getRating().equalsIgnoreCase(ratingFilter))
+			if (ratingFilter != null && !movie.getRating().equalsIgnoreCase(ratingFilter))
 				return false;
 
 			// Test for Runtime
@@ -656,8 +666,16 @@ public final class CollectionPane extends AbstractPane
 		{
 			Object	source = e.getSource();
 
+			// TODO: REmove this debug line
+			System.out.println(source.toString());
 			// TODO #9a: Call updateFilter() if the action came from any
 			// of your accordion widgets that involve action events.
+			if (source == titleIncludeField)
+				updateFilter();
+			else if (source == titleExcludeField)
+				updateFilter();
+			else if (genreMatchChecks.contains(source))
+				updateFilter();
 		}
 	}
 
@@ -701,21 +719,20 @@ public final class CollectionPane extends AbstractPane
 	// edits an edited value in one of your accordion widgets.
 
 	// For example, for someComboBox...
-	//private void	changeString(ObservableValue<? extends String> observable,
-	//							 String oldValue, String newValue)
-	//{
-	//	if (observable == someComboBox.getSelectionModel().selectedItemProperty())
-	//		updateFilter();
-	//}
+	private void	changeString(ObservableValue<? extends String> observable,
+								 String oldValue, String newValue)
+	{
+		if (observable == ratingBox.getSelectionModel().selectedItemProperty())
+			updateFilter();
+	}
 
-	// For widgets with a numeric value like Slider and Spinner, you can't use
-	// their actual numeric type directly. Use the Number superclass instead.
-	// Cast oldValue or newValue to the actual type inside the method as needed.
-	//private void	changeDouble(ObservableValue<? extends Number> observable,
-	//							 Number oldValue, Number newValue)
-	//{
-	//	//Double		value = (Double)newValue;
-	//}
+	private void	changeNumber(ObservableValue<? extends Number> observable,
+								 Number oldValue, Number newValue)
+	{
+		if (observable == minRuntimeSpinner.getValueFactory().valueProperty() ||
+				observable == maxRuntimeSpinner.getValueFactory().valueProperty())
+			updateFilter();
+	}
 
 	//**********************************************************************
 	// Private Methods (Property Change Handlers, Movie)
