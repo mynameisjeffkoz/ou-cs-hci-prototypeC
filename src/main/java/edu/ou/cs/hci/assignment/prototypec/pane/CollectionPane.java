@@ -513,8 +513,20 @@ public final class CollectionPane extends AbstractPane
 				return false;
 
 			// Test for Genre
-
-
+			// Get the integer as a binary string
+			StringBuilder builder = new StringBuilder(Integer.toBinaryString(movie.getGenre()));
+			// Reverse the order to start at action
+			builder.reverse();
+			// Traverse the string one character at a time
+			for (int i = 0; i < builder.length(); i++) {
+				// If a movie genre matches a checkbox
+				if (builder.charAt(i) == '1' && genreMatchChecks.get(i).isSelected())
+					// Exit the loop early
+					break;
+				// If you reach the end without any successes
+				if (i == builder.length() - 1)
+					return false;
+			}
 
 			// Test for Rating
 
